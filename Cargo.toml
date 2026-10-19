@@ -1,8 +1,8 @@
 [package]
 name = "openssl-src"
 # Crate version stays on the 300 line so openssl-sys 0.9.114's `^300.2.0`
-# requirement accepts this fork. The sources are OpenSSL 4.1.0-beta1.
-version = "300.99.0+4.1.0-beta1"
+# requirement accepts this fork. The sources are OpenSSL 4.1.0-beta2.
+version = "300.99.0+4.1.0-beta2"
 authors = ["Alex Crichton <alex@alexcrichton.com>"]
 license = "MIT/Apache-2.0"
 readme = "README.md"

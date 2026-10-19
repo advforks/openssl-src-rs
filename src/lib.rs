@@ -207,7 +207,8 @@ impl Build {
             // Avoid multilib-postfix for build targets that specify it
             .arg("--libdir=lib")
             // Scomm.AI: default provider only. Probed on 4.1.0-beta1
-            // (VC-WIN64-ARM); Configure accepted every flag below.
+            // (VC-WIN64-ARM); 4.1.0-beta2 keeps the same flags. Configure
+            // accepted every flag below.
             // That Windows target defines OPENSSL_NO_ASM itself. This list
             // does not pass no-asm, so other targets keep their assembly.
             .arg("no-legacy")
