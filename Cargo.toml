@@ -107,6 +107,8 @@ exclude = [
   '!openssl/util/mkrc.pl',
   '!openssl/util/echo.pl',
   '!openssl/util/copy.pl',
+  # OpenSSL 4 generates the *_err.c/.h files with it during Configure.
+  '!openssl/util/mkerr.pl',
   '!openssl/**/build.info',
 ]
 
