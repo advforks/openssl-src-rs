@@ -88,9 +88,6 @@ exclude = [
 
   'openssl/apps/demoSRP/srp_verifier.txt',
   'openssl/apps/demoSRP/srp_verifier.txt.attr',
-  'openssl/crypto/err/openssl.txt',
-  'openssl/crypto/objects/obj_xref.txt',
-  'openssl/crypto/objects/objects.txt',
   'openssl/engines/e_afalg.txt',
   'openssl/engines/e_capi.txt',
   'openssl/engines/e_dasync.txt',
