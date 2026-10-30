@@ -1,8 +1,8 @@
 [package]
 name = "openssl-src"
 # Crate version stays on the 300 line so openssl-sys 0.9.114's `^300.2.0`
-# requirement accepts this fork. The sources are OpenSSL 4.1.0-beta2.
-version = "300.99.0+4.1.0-beta2"
+# requirement accepts this fork. The sources are OpenSSL 4.1.0.
+version = "300.99.0+4.1.0"
 authors = ["Alex Crichton <alex@alexcrichton.com>"]
 license = "MIT/Apache-2.0"
 readme = "README.md"
@@ -88,9 +88,6 @@ exclude = [
 
   'openssl/apps/demoSRP/srp_verifier.txt',
   'openssl/apps/demoSRP/srp_verifier.txt.attr',
-  'openssl/crypto/err/openssl.txt',
-  'openssl/crypto/objects/obj_xref.txt',
-  'openssl/crypto/objects/objects.txt',
   'openssl/engines/e_afalg.txt',
   'openssl/engines/e_capi.txt',
   'openssl/engines/e_dasync.txt',
@@ -107,6 +104,8 @@ exclude = [
   '!openssl/util/mkrc.pl',
   '!openssl/util/echo.pl',
   '!openssl/util/copy.pl',
+  # OpenSSL 4 generates the *_err.c/.h files with it during Configure.
+  '!openssl/util/mkerr.pl',
   '!openssl/**/build.info',
 ]
 

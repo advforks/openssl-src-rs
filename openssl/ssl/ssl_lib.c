@@ -589,6 +589,7 @@ int ossl_ssl_connection_reset(SSL *s)
     sc->psksession_id = NULL;
     sc->psksession_id_len = 0;
     sc->hello_retry_request = SSL_HRR_NONE;
+    sc->dtls13_process_hello = 0;
     sc->sent_tickets = 0;
 
     sc->error = 0;
@@ -682,6 +683,9 @@ int ossl_ssl_connection_reset(SSL *s)
             if (is_dtls_listener_conn) {
                 DTLS_LISTENER *dl = (DTLS_LISTENER *)saved_listener;
 
+                /* The detached connection cannot unregister itself on free. */
+                ossl_dtls_listener_unregister_established_conn(saved_listener,
+                    &saved_peer_addr);
                 ossl_crypto_mutex_lock(dl->mutex);
                 sc->listener_rx = NULL;
                 ossl_crypto_mutex_unlock(dl->mutex);
@@ -2114,17 +2118,9 @@ int SSL_has_pending(const SSL *s)
     sc = SSL_CONNECTION_FROM_CONST_SSL(s);
 
     /* Check buffered app data if any first */
-    if (SSL_CONNECTION_IS_DTLS(sc)) {
-        TLS_RECORD *rdata;
-        pitem *item, *iter;
-
-        iter = pqueue_iterator(sc->rlayer.d->buffered_app_data);
-        while ((item = pqueue_next(&iter)) != NULL) {
-            rdata = item->data;
-            if (rdata->length > 0)
-                return 1;
-        }
-    }
+    if (SSL_CONNECTION_IS_DTLS(sc)
+        && DTLS_RECORD_LAYER_buffered_app_data_pending(&sc->rlayer))
+        return 1;
 
     if (RECORD_LAYER_processed_read_pending(&sc->rlayer))
         return 1;
