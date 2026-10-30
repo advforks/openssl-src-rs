@@ -31,7 +31,7 @@ OpenSSL Releases
 OpenSSL 4.1
 -----------
 
-### Changes between 4.0 and 4.1 beta 2 [9 Oct 2026]
+### Changes between 4.0 and 4.1.0 [23 Oct 2026]
 
  * Changed the OpenSSL FIPS provider so that every algorithm advertised with
    `fips=yes` explicitly exposes the `fips-indicator` as a gettable context
@@ -41,6 +41,21 @@ OpenSSL 4.1
    they expose the indicator.
 
    *Shane Lontis and Paul Dale*
+
+ * Changed TLS 1.3 clients to offer a PSK, and to attempt 0-RTT early data,
+   only when it can actually be used. A resumption ticket or external PSK is
+   offered only if some offered ciphersuite shares its handshake digest, and
+   0-RTT is attempted only if the first offered PSK's exact ciphersuite and,
+   where recorded, its ALPN protocol are offered and, for a ticket, it has not
+   aged out. When 0-RTT is not viable the client keeps the PSK for a 1-RTT
+   handshake. In particular a client-detected ALPN inconsistency now suppresses
+   0-RTT rather than failing with `SSL_R_INCONSISTENT_EARLY_DATA_ALPN`.
+
+   Fixed TLS 1.3 clients to reject a `psk_use_session` callback PSK whose master
+   key is empty, with `SSL_R_BAD_PSK`, instead of failing later in binder
+   computation.
+
+   *Viktor Dukhovni*
 
  * Added support for DTLS 1.3 ([RFC 9147]).
    Refer to the `ossl-guide-dtlsv13(7)` manual page for details.
@@ -883,7 +898,7 @@ OpenSSL 4.0
    *Alexandr Nedvědický*
 
  * Fixed a bug where `EVP_DecryptFinal()` incorrectly reported a stale success
-   on AES-SIV authentication failure after a preciously successful message
+   on AES-SIV authentication failure after a previously successful message
    decryption.
    <!-- https://github.com/openssl/openssl/pull/31610 -->
 
@@ -1969,8 +1984,9 @@ OpenSSL 4.0
 
    *Bob Beck*
 
- * Added `OSSL_CMP_OPT_PERMIT_TA_IN_EXTRACERTS_FOR_IR` option for `OSSL_CMP_CTX`
-   and a corresponding `-ta_in_ip_extracert` option for the `openssl cmp` command.
+ * Added a `-ta_in_ip_extracert` option for the `openssl cmp` command, that sets
+   `OSSL_CMP_OPT_PERMIT_TA_IN_EXTRACERTS_FOR_IR` option for the `OSSL_CMP_CTX`
+   object.
 
    This work was sponsored by Siemens AG.
 

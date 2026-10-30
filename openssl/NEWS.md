@@ -26,7 +26,7 @@ OpenSSL Releases
 OpenSSL 4.1
 -----------
 
-### Major changes between OpenSSL 4.0 and OpenSSL 4.1 beta 2 [in pre-release]
+### Major changes between OpenSSL 4.0 and OpenSSL 4.1.0 [23 Oct 2026]
 
 OpenSSL 4.1.0 is a feature release adding significant new functionality
 to OpenSSL.
@@ -78,6 +78,24 @@ Known issues in 4.1.0
     transmission is lost. A fix is in progress and planned for a future
     release.
 
+  * <https://github.com/openssl/openssl/issues/33277>
+    A permanent receive failure on a DTLS listener can be reported as
+    `SSL_ERROR_WANT_READ` on an accepted connection. Polling and subsequent
+    accept calls may also fail to report the error, causing applications
+    to continue waiting after a permanent failure.
+
+  * <https://github.com/openssl/openssl/issues/33278>
+    A retryable write failure on a nonblocking connection accepted from a
+    DTLS listener can be reported as `SSL_ERROR_SYSCALL` instead of
+    `SSL_ERROR_WANT_WRITE`. Applications treating this result as fatal may
+    close a connection that is still usable.
+
+  * <https://github.com/openssl/openssl/issues/33242>
+    DTLS 1.3 servers may abort handshakes with an `unexpected_message` alert
+    when a client acknowledges part or all of the server's first flight
+    before sending its response. This can occur after packet loss or while
+    the client is preparing its authentication response.
+
 OpenSSL 4.0
 -----------
 
@@ -103,7 +121,8 @@ This release incorporates the following bug fixes and mitigations:
   * Fixed potential CPU DoS via O(n^2) fragment reassembly in QUIC.
     ([CVE-2026-42772])
 
-  * Fixed a timing side-channel in scalar multiplication for mon-NIST EC curves.
+  * Fixed a timing side-channel leak in generic elliptic curve scalar
+    multiplication.
     ([CVE-2026-54872])
 
   * Fixed QUIC `STREAM` fragment metadata DoS.
